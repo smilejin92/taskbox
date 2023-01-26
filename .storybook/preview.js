@@ -1,4 +1,13 @@
+// Registers the msw addon
+import { initialize, mswDecorator } from "msw-storybook-addon";
+
 import "../src/index.css";
+
+// Initialize MSW
+initialize();
+
+// Provide the MSW addon decorator globally
+export const decorators = [mswDecorator];
 
 // used to control the behavior of Storybook's features and addons.
 //👇 Configures Storybook to log the actions( onArchiveTask and onPinTask ) in the UI.
