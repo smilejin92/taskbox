@@ -1,5 +1,11 @@
 import { rest } from "msw";
 import { Provider } from "react-redux";
+import {
+  fireEvent,
+  within,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@storybook/testing-library";
 
 import store from "../lib/store";
 import InboxScreen from "./InboxScreen";
@@ -27,6 +33,23 @@ Default.parameters = {
       ),
     ],
   },
+};
+
+// * INTERACTION TEST
+// A play function includes small snippets of code that run after the story renders.
+// we can write stories with the play function to interact with the UI and simulate human behavior no matter the frontend framework.
+// HOWEVER, it only runs the interaction tests when viewing the story. Therefore, we'd still have to go through each story to run all checks if we make a change. (can be AUTOMATED by test-storybook)
+Default.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  // Waits for the component to transition from the loading state
+  await waitForElementToBeRemoved(await canvas.findByTestId("loading"));
+  // Waits for the component to be updated based on the store
+  await waitFor(async () => {
+    // Simulates pinning the first task
+    await fireEvent.click(canvas.getByLabelText("pinTask-1"));
+    // Simulates pinning the third task
+    await fireEvent.click(canvas.getByLabelText("pinTask-3"));
+  });
 };
 
 export const Error = Template.bind({});
